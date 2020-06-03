@@ -1,3 +1,12 @@
+variable "vpc_id" {
+  type = string
+}
+
+variable "private_subnets" {
+  type = list(string)
+  default = []
+}
+
 variable "environment" {
   default     = "development"
   description = "Kubernetes Cluster Environment"
@@ -11,11 +20,6 @@ variable "cluster_name" {
 variable "cluster_version" {
   default     = "1.15"
   description = "Kubernetes Cluster Version"
-}
-
-variable "vpc_name" {
-  default     = "pharmaledger-vpc"
-  description = "Kubernetes Cluster VPC Name"
 }
 
 variable "region" {

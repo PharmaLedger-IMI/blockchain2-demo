@@ -4,6 +4,10 @@ The Amazon Elastic Kubernetes Service (EKS) is the AWS service for deploying, ma
 
 In this guide, you will deploy an EKS cluster using Terraform. Then, you will configure kubectl using Terraform output to deploy a Kubernetes dashboard on the cluster.
 
+The final setup should be similar to following
+
+![EKS](eks.jpg?raw=true)
+
 ## Prerequisites
 The guide assumes some basic familiarity with Kubernetes and kubectl but does not assume any pre-existing deployment.
 
@@ -35,14 +39,14 @@ Your default region can be found in the AWS Web Management Console beside your u
 
 ## Terraform files
 
-In here, you will find six files used to provision a VPC, security groups and an EKS cluster.
+In here, you will find six files used to provision security groups and an EKS cluster.
 
-* `vpc.tf` provisions a VPC, subnets and availability zones using the AWS VPC Module. A new VPC is created for this guide so it doesn't impact your existing cloud environment and resources.
 * `security-groups.tf` provisions the security groups used by the EKS cluster.
 * `eks.tf` provisions all the resources (AutoScaling Groups, etc...) required to set up an EKS cluster in the private subnets and bastion servers to access the cluster using the AWS EKS Module.
 * `outputs.tf` defines the output configuration.
 * `versions.tf` sets the Terraform version to at least 0.12. It also sets versions for the providers used.
-* `variables.tfvars` has the variables which you can set yourself.
+* `variables.tfvars` defines the variables
+* `terraform.tfvars` Where you can set variables yourself.
 
 ## Initialize Terraform workspace
 
@@ -57,6 +61,13 @@ In the initialized directory, run terraform apply and review the planned actions
 
 ```
 terraform apply
+```
+
+## Destroy the EKS cluster
+In the initialized directory, run terraform destroy and review the planned actions. Your terminal output should indicate the plan is running and what resources will be deleted.
+
+```
+terraform destroy
 ```
 
 This process should take approximately 10 minutes. Upon successful application, your terminal prints the outputs defined in `outputs.tf`.
