@@ -1,0 +1,188 @@
+swagger: '2.0'
+info:
+  version: demo
+  title: Anchor API
+  license:
+    name: MIT
+host: data-anchor-api.swagger.io
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /data_anchors:
+    post:
+      tags:
+        - data-anchoring
+      summary: Create a new data anchor
+      operationId: createDataAnchor
+      parameters:
+        - name: payload
+          in: body
+          required: true
+          description: The attributes of the anchor
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: "Name of the anchor (doesn't need to be unique)."
+                example: 'My Data Anchor'
+              hash:
+                type: string
+                description: |
+                  SHA256 hash (ie. the fingerprint) of the original data to anchor.
+                  The value must be provided as an hexadecimal lowercase string.
+                example: 'de828d5995db19fbc792dd1aa822f1b9817514d0347d5fbf33c685ea55d7706e'
+              metadata:
+                type: object
+                description: |
+                  A set of variables (key/values pairs) to store with the anchor and giving additional information about the anchored data. Values must be of type null, boolean, string or number: nested JSON objects are not allowed.
+            required:
+              - name
+              - hash
+      responses:
+        '200':
+          description: The anchor was created successfully.
+          headers: {}
+          schema:
+            $ref: '#/definitions/DataAnchor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /data_anchors/{anchorId}:
+    get:
+      tags:
+        - data-anchoring
+      summary: Get an anchor by its identifier
+      operationId: getDataAnchor
+      parameters:
+        - name: anchorId
+          in: path
+          required: true
+          description: The id of the anchor to retrieve
+          type: string
+      responses:
+        '200':
+          description: A JSON object containing anchor information
+          headers: {}
+          schema:
+            $ref: '#/definitions/DataAnchor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - data-anchoring
+      summary: Update an anchor by its identifier
+      description: |
+        Use this operation to update an anchor.
+        Only the properties name, metadata can be modified.
+      operationId: updateDataAnchor
+      parameters:
+        - name: anchorId
+          in: path
+          required: true
+          description: The id of the anchor to update
+          type: string
+        - name: payload
+          in: body
+          required: true
+          description: The attributes of the anchor
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: "Name of the anchor (doesn't need to be unique)."
+                example: 'My Data Anchor'
+              metadata:
+                type: object
+                description: |
+                  A set of variables (key/values pairs) to store with the anchor and giving additional information about the anchored data. Values must be of type null, boolean, string or number: nested JSON objects are not allowed.
+      responses:
+        '200':
+          description: The anchor was updated successfully.
+          headers: {}
+          schema:
+            $ref: '#/definitions/DataAnchor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - data-anchoring
+      summary: Delete an anchor by its identifier
+      operationId: deleteDataAnchor
+      parameters:
+        - name: anchorId
+          in: path
+          required: true
+          description: The id of the anchor to delete
+          type: string
+      responses:
+        '204':
+          description: The anchor was deleted successfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  DataAnchor:
+    description: 'A data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.'
+    type: object
+    required:
+      - name
+      - hash
+    properties:
+      name:
+        type: string
+        description: "Name of the anchor (doesn't need to be unique)."
+        example: 'My Data Anchor'
+      hash:
+        type: string
+        description: |
+          SHA256 hash (ie. the fingerprint) of the original data to anchor.
+          The value must be provided as an hexadecimal lowercase string.
+        example: 'de828d5995db19fbc792dd1aa822f1b9817514d0347d5fbf33c685ea55d7706e'
+      metadata:
+        type: object
+        description: |
+          A set of variables (key/values pairs) to store with the anchor and giving additional information about the anchored data. Values must be of type null, boolean, string or number: nested JSON objects are not allowed.
+      createdAt:
+        type: string
+        format: date-time
+        description: "Time of creation notation. Format should be RFC 3339"
+      updatedAt:
+        type: string
+        format: date-time
+        description: "Time of last modification. Format should be RFC 3339"
+      txId:
+        type: string
+        description: "Identifier of the blockchain transaction where the anchoring occurred."
+  Error:
+    description: Error object
+    type: object
+    required:
+      - statusCode
+      - message
+      - error
+    properties:
+      statusCode:
+        type: integer
+        description: HTTP error code
+      errorCode:
+        type: string
+        description: Internal error code
+      message:
+        type: string
+        description: Internal error message
+      error:
+        type: string
+        description: HTTP error message
