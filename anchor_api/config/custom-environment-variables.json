@@ -1,0 +1,6 @@
+{
+  "web3": {
+    "provider": "WEB3_PROVIDER",
+    "account": "WEB3_ACCOUNT"
+  }
+}

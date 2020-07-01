@@ -60,14 +60,15 @@ $ terraform init
 In the initialized directory, run terraform apply and review the planned actions. Your terminal output should indicate the plan is running and what resources will be created.
 
 ```
-terraform apply
+terraform plan -input=false -var=cluster_name=pl-cluster2 -out=pl-cluster2/terraform.tfplan -state=pl-cluster2/terraform.tfstate
+terraform apply -state=pl-cluster2/terraform.tfstate pl-cluster2/terraform.tfplan
 ```
 
 ## Destroy the EKS cluster
 In the initialized directory, run terraform destroy and review the planned actions. Your terminal output should indicate the plan is running and what resources will be deleted.
 
 ```
-terraform destroy
+terraform destroy -auto-approve -state=pl-cluster2/terraform.tfstate
 ```
 
 This process should take approximately 10 minutes. Upon successful application, your terminal prints the outputs defined in `outputs.tf`.
@@ -89,7 +90,7 @@ The Kubernetes Metrics Server is an aggregator of resource usage data in your cl
 
 * Deploy the Metrics Server with the following command:
 ```
-  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
 ```
 * Verify that the metrics-server deployment is running the desired number of pods with the following command.
 ```

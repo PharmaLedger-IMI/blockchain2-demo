@@ -15,12 +15,13 @@ module "eks" {
   worker_groups = [
     {
       name                          = "worker-group-1"
-      instance_type                 = "t3.small"
+      instance_type                 = "t3.medium"
       additional_userdata           = ""
-      asg_desired_capacity          = "2"
+      asg_desired_capacity          = "3"
       asg_max_size                  = "4"
-      asg_min_size                  = "2"
+      asg_min_size                  = "3"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
+      public_ip = true
     },
   ]
 
