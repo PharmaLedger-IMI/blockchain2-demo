@@ -17,6 +17,10 @@ const express = require('express')
     , account = config.get('web3.account');
 
 DataAnchor.setProvider(web3.currentProvider);
+DataAnchor.autoGas = true;
+DataAnchor.defaults({
+  from: account
+})
 
 // adding Helmet to enhance your API's security
 app.use(helmet());
@@ -47,38 +51,92 @@ app.get('/', (req, res) => {
 });
 
 app.post('/data_anchors', async (req, res) => {
-    const instance = await DataAnchor.new(req.body.name, req.body.hash, JSON.stringify(req.body.metadata), {from: account});
-    const data = await instance.getData.call();
-    await res.json({
-        anchorId: data[0],
-        name: data[1],
-        hash: data[2],
-        metadata: JSON.parse(data[3]),
-    });
+
+    try {
+        let unlocked = false;
+
+        if (config.get('web3.password') && !unlocked) {
+            console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
+            unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
+        }
+
+        const instance = await DataAnchor.new(req.body.name, req.body.hash, JSON.stringify(req.body.metadata), {from: account});
+        const data = await instance.getData.call();
+
+        if (config.get('web3.password') && unlocked) {
+            console.log('>> Locking account ' + account);
+            unlocked = await web3.eth.personal.lockAccount(account);
+        }
+
+        await res.json({
+            anchorId: data[0],
+            name: data[1],
+            hash: data[2],
+            metadata: JSON.parse(data[3]),
+        });
+    } catch (error) {
+        console.log(error)
+        res.json({});
+    }
 });
 
 app.get('/data_anchors/:anchorId', async (req, res) => {
-    const instance = await DataAnchor.at(req.params.anchorId);
-    const data = await instance.getData.call();
-    await res.json({
-        anchorId: data[0],
-        name: data[1],
-        hash: data[2],
-        metadata: JSON.parse(data[3]),
-    });
+    try {
+        let unlocked = false;
+
+        if (config.get('web3.password') && !unlocked) {
+            console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
+            unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
+        }
+
+        const instance = await DataAnchor.at(req.params.anchorId);
+        const data = await instance.getData.call();
+
+        if (config.get('web3.password') && unlocked) {
+            console.log('>> Locking account ' + account);
+            unlocked = await web3.eth.personal.lockAccount(account);
+        }
+
+        await res.json({
+            anchorId: data[0],
+            name: data[1],
+            hash: data[2],
+            metadata: JSON.parse(data[3]),
+        });
+    } catch (error) {
+        console.log(error)
+        res.json({});
+    }
 });
 
 app.put('/data_anchors/:anchorId', async (req, res) => {
-    console.log(req.body);
-    const instance = await DataAnchor.at(req.params.anchorId);
-    const result = await instance.setData.sendTransaction(req.body.name, JSON.stringify(req.body.metadata), {from: account});
-    const data = await instance.getData.call();
-    await res.json({
-        anchorId: data[0],
-        name: data[1],
-        hash: data[2],
-        metadata: JSON.parse(data[3]),
-    });
+    try {
+        let unlocked = false;
+
+        if (config.get('web3.password') && !unlocked) {
+            console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
+            unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
+        }
+
+        const instance = await DataAnchor.at(req.params.anchorId);
+        const result = await instance.setData.sendTransaction(req.body.name, JSON.stringify(req.body.metadata), {from: account});
+        const data = await instance.getData.call();
+
+        if (config.get('web3.password') && unlocked) {
+            console.log('>> Locking account ' + account);
+            unlocked = await web3.eth.personal.lockAccount(account);
+        }
+
+        await res.json({
+            anchorId: data[0],
+            name: data[1],
+            hash: data[2],
+            metadata: JSON.parse(data[3]),
+        });
+    } catch (error) {
+        console.log(error)
+        res.json({error: error});
+    }
 });
 
 // starting the server

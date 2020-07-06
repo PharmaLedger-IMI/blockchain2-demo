@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "helmet": "^3.23.1",
     "morgan": "^1.10.0",
+    "swagger-ui-express": "^4.1.4",
     "truffle": "^5.1.30",
     "web3": "^1.2.9"
   },

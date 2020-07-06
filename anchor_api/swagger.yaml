@@ -115,24 +115,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-    delete:
-      tags:
-        - data-anchoring
-      summary: Delete an anchor by its identifier
-      operationId: deleteDataAnchor
-      parameters:
-        - name: anchorId
-          in: path
-          required: true
-          description: The id of the anchor to delete
-          type: string
-      responses:
-        '204':
-          description: The anchor was deleted successfully.
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
 definitions:
   DataAnchor:
     description: 'A data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.'
@@ -163,9 +145,9 @@ definitions:
         type: string
         format: date-time
         description: "Time of last modification. Format should be RFC 3339"
-      txId:
+      anchorId:
         type: string
-        description: "Identifier of the blockchain transaction where the anchoring occurred."
+        description: "Identifier of the anchor"
   Error:
     description: Error object
     type: object
