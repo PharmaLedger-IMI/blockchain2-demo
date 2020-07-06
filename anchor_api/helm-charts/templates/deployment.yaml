@@ -37,6 +37,11 @@ spec:
                 secretKeyRef:
                   key:  web3_account
                   name: {{ .Release.Name }}-env
+            - name: "WEB3_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key:  web3_password
+                  name: {{ .Release.Name }}-env
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

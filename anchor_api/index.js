@@ -14,13 +14,16 @@ const express = require('express')
     , DataAnchorArtifact = require('./build/contracts/DataAnchor.json')
     , TruffleContract = require("@truffle/contract")
     , DataAnchor = TruffleContract(DataAnchorArtifact)
-    , account = config.get('web3.account');
+    , account = config.get('web3.account')
+    , doUnlock = config.get('web3.password') && config.get('web3.password').length > 0;
 
 DataAnchor.setProvider(web3.currentProvider);
 DataAnchor.autoGas = true;
 DataAnchor.defaults({
   from: account
 })
+
+console.log(doUnlock);
 
 // adding Helmet to enhance your API's security
 app.use(helmet());
@@ -55,7 +58,7 @@ app.post('/data_anchors', async (req, res) => {
     try {
         let unlocked = false;
 
-        if (config.get('web3.password') && !unlocked) {
+        if (doUnlock && !unlocked) {
             console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
             unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
         }
@@ -63,7 +66,7 @@ app.post('/data_anchors', async (req, res) => {
         const instance = await DataAnchor.new(req.body.name, req.body.hash, JSON.stringify(req.body.metadata), {from: account});
         const data = await instance.getData.call();
 
-        if (config.get('web3.password') && unlocked) {
+        if (doUnlock && unlocked) {
             console.log('>> Locking account ' + account);
             unlocked = await web3.eth.personal.lockAccount(account);
         }
@@ -84,7 +87,7 @@ app.get('/data_anchors/:anchorId', async (req, res) => {
     try {
         let unlocked = false;
 
-        if (config.get('web3.password') && !unlocked) {
+        if (doUnlock && !unlocked) {
             console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
             unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
         }
@@ -92,7 +95,7 @@ app.get('/data_anchors/:anchorId', async (req, res) => {
         const instance = await DataAnchor.at(req.params.anchorId);
         const data = await instance.getData.call();
 
-        if (config.get('web3.password') && unlocked) {
+        if (doUnlock && unlocked) {
             console.log('>> Locking account ' + account);
             unlocked = await web3.eth.personal.lockAccount(account);
         }
@@ -113,7 +116,7 @@ app.put('/data_anchors/:anchorId', async (req, res) => {
     try {
         let unlocked = false;
 
-        if (config.get('web3.password') && !unlocked) {
+        if (doUnlock && !unlocked) {
             console.log('>> Unlocking account ' + account + ' with password ' + config.get('web3.password'));
             unlocked = await web3.eth.personal.unlockAccount(account, config.get('web3.password'), 36000);
         }
@@ -122,7 +125,7 @@ app.put('/data_anchors/:anchorId', async (req, res) => {
         const result = await instance.setData.sendTransaction(req.body.name, JSON.stringify(req.body.metadata), {from: account});
         const data = await instance.getData.call();
 
-        if (config.get('web3.password') && unlocked) {
+        if (doUnlock && unlocked) {
             console.log('>> Locking account ' + account);
             unlocked = await web3.eth.personal.lockAccount(account);
         }

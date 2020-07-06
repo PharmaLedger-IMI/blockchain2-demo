@@ -74,3 +74,4 @@ affinity: {}
 env:
   web3_provider: ""
   web3_account: ""
+  web3_password: ""
