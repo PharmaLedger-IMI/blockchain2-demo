@@ -19,9 +19,10 @@ To run this PoC you will need following:
 * an AWS account (We have created an AWS account for the PoC, please contact to get the `AWS Access Key ID` and `AWS Secret Access Key` in case you need)
 * a configured AWS CLI: In order for Terraform to run operations on your behalf, you must install and configure the AWS CLI tool. To install the AWS CLI, follow [these instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html) or choose a package manager based on your operating system.
 * AWS IAM Authenticator: To install follow [these instructions](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
+* A Kubernetes cluster with Kubernetes v1.15
 * `kubectl`: To install follow [these instructions](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
 * `wget` (required for the terraform `eks` module): Install based on you OS
-* A Kubernetes cluster with Kubernetes v1.15
+* `helm`: The package manager for Kubernetes
 * A Quorum / Ethereum network deployed in the Kubernetes cluster
 
 After you've installed the AWS CLI, configure it by running aws configure. When prompted, enter your AWS Access Key ID, Secret Access Key, region and output format.
@@ -60,12 +61,12 @@ kubectl get services
 
 Above command will output something like below, and please note down `ClusterIP` of `quorum-node1`
 ```
-NAME           TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)                                                                        AGE
-kubernetes     ClusterIP      172.20.0.1       <none>                                                                    443/TCP                                                                        131m
-quorum-node1   LoadBalancer   172.20.179.183   a241642f88a8d4f19bc145eca395f40b-52798287.eu-west-2.elb.amazonaws.com     9001:30501/TCP,9080:31109/TCP,8545:32375/TCP,30303:30943/TCP,50401:32577/TCP   122m
-quorum-node2   LoadBalancer   172.20.102.53    a4e2b95d0f4e54bc092b2940e64f3260-780403947.eu-west-2.elb.amazonaws.com    9001:32522/TCP,9080:30328/TCP,8545:30053/TCP,30303:31806/TCP,50401:32059/TCP   122m
-quorum-node3   LoadBalancer   172.20.35.177    a3c84060dc3e043229d4764fedb9c9d4-228948034.eu-west-2.elb.amazonaws.com    9001:32401/TCP,9080:31073/TCP,8545:30365/TCP,30303:30474/TCP,50401:31578/TCP   122m
-quorum-node4   LoadBalancer   172.20.64.242    ac6924ee3b1cf4ba4b4e08941bab14aa-1675415563.eu-west-2.elb.amazonaws.com   9001:31719/TCP,9080:31572/TCP,8545:32215/TCP,30303:32028/TCP,50401:31111/TCP   122m
+NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                          AGE
+kubernetes     ClusterIP   172.20.0.1       <none>        443/TCP                                          20h
+quorum-node1   ClusterIP   172.20.152.239   <none>        9001/TCP,9080/TCP,8545/TCP,30303/TCP,50401/TCP   97s
+quorum-node2   ClusterIP   172.20.105.236   <none>        9001/TCP,9080/TCP,8545/TCP,30303/TCP,50401/TCP   97s
+quorum-node3   ClusterIP   172.20.200.7     <none>        9001/TCP,9080/TCP,8545/TCP,30303/TCP,50401/TCP   97s
+quorum-node4   ClusterIP   172.20.36.220    <none>        9001/TCP,9080/TCP,8545/TCP,30303/TCP,50401/TCP   97s
 ```
 
 ## Deploy Anchor API
@@ -75,7 +76,7 @@ Run following command in `blockchain2-demo` directory to deploy the Anchor API w
 Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`
 ```
-helm install --set env.web3_provider=http://172.20.179.183:8545 --set env.web3_account=0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e anchor-api-quorum anchor_api/helm-charts/
+helm install --set env.web3_provider=http://172.20.152.239:8545 --set env.web3_account=0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e anchor-api-quorum anchor_api/helm-charts/
 ```
 
 # Anchor API with Ethereum
@@ -92,7 +93,6 @@ Clone our [blockchain3-demo](https://github.com/PharmaLedger-IMI/blockchain3-dem
 Run following command in `blockchain3-demo` directory:
 ```
 helm install my-eth-pharmaledger stable/ethereum -f values.yaml
-kubectl apply -f ethereum-geth-tx-loadbalancer.yaml
 ```
 Run following command to list all the services that are running.
 ```
@@ -115,5 +115,5 @@ Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`.
 Use `lst7upm` as value of `env.web3_password`.
 ```
-helm install --set env.web3_provider=http://172.20.217.232:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum anchor_api/helm-charts/
+helm install --set env.web3_provider=http://172.20.214.92:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum anchor_api/helm-charts/
 ```
