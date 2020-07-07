@@ -56,26 +56,27 @@ Initialize your Terraform workspace, which will download and configure the provi
 $ terraform init
 ```
 
-## Provision the EKS cluster
-In the initialized directory, run terraform apply and review the planned actions. Your terminal output should indicate the plan is running and what resources will be created.
+## Provisioning and Destroying the EKS cluster
+Lets assume we will provision a EKS cluster and we are naming it as `pl-cluster2`.
+In the initialized directory, run terraform apply and review the planned actions. 
+Your terminal output should indicate the plan is running and what resources will be created.
+This process should take approximately 10 minutes. Upon successful application, your terminal prints the outputs defined in `outputs.tf`.
 
 ```
 terraform plan -input=false -var=cluster_name=pl-cluster2 -out=pl-cluster2/terraform.tfplan -state=pl-cluster2/terraform.tfstate
 terraform apply -state=pl-cluster2/terraform.tfstate pl-cluster2/terraform.tfplan
 ```
 
-## Destroy the EKS cluster
-In the initialized directory, run terraform destroy and review the planned actions. Your terminal output should indicate the plan is running and what resources will be deleted.
+To destroy the cluster, in the initialized directory, run terraform destroy and review the planned actions. 
+Your terminal output should indicate the plan is running and what resources will be deleted.
 
 ```
 terraform destroy -auto-approve -state=pl-cluster2/terraform.tfstate
 ```
 
-This process should take approximately 10 minutes. Upon successful application, your terminal prints the outputs defined in `outputs.tf`.
-
 ## Configure kubectl
 
-Now that you've provisioned your EKS cluster, you need to configure `kubectl`. Customize the following command with your `cluster_name` and `region` (the values from Terraform's output) you defined in `terraform.tfvars`. It will get the access credentials for your cluster and automatically configure `kubectl`.
+Now that you've provisioned your EKS cluster `pl-cluster2`, you need to configure `kubectl`. Customize the following command with your `cluster_name` and `region` (the values from Terraform's output) you defined in `terraform.tfvars`. It will get the access credentials for your cluster and automatically configure `kubectl`.
 
 ```
 aws eks --region eu-west-2 update-kubeconfig --name pl-cluster2
