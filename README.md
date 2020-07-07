@@ -111,7 +111,7 @@ my-eth-pharmaledger-ethereum-geth-tx    ClusterIP      172.20.217.232   <none>  
 Clone our [blockchain2-demo](https://github.com/PharmaLedger-IMI/blockchain2-demo) (this) repo then follow below steps:
 
 Run following command in `blockchain2-demo` directory to deploy the Anchor API which will use Ethereum network. 
-Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
+Use `ClusterIP` of `*-ethereum-geth-tx` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`.
 Use `lst7upm` as value of `env.web3_password`.
 ```
