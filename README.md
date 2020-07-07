@@ -16,8 +16,26 @@ For this PoC Anchor API you can use one of the following blockchain network to s
 
 To run this PoC you will need following:
 
+* an AWS account (We have created an AWS account for the PoC, please contact to get the `AWS Access Key ID` and `AWS Secret Access Key` in case you need)
+* a configured AWS CLI: In order for Terraform to run operations on your behalf, you must install and configure the AWS CLI tool. To install the AWS CLI, follow [these instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html) or choose a package manager based on your operating system.
+* AWS IAM Authenticator: To install follow [these instructions](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
+* `kubectl`: To install follow [these instructions](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+* `wget` (required for the terraform `eks` module): Install based on you OS
 * A Kubernetes cluster with Kubernetes v1.15
 * A Quorum / Ethereum network deployed in the Kubernetes cluster
+
+After you've installed the AWS CLI, configure it by running aws configure. When prompted, enter your AWS Access Key ID, Secret Access Key, region and output format.
+
+```
+aws configure
+AWS Access Key ID [None]: YOUR_AWS_ACCESS_KEY_ID
+AWS Secret Access Key [None]: YOUR_AWS_SECRET_ACCESS_KEY
+Default region name [None]: YOUR_AWS_REGION
+Default output format [None]: json
+```
+
+If you don't have an AWS Access Credentials, create your AWS Access Key ID and Secret Access Key by navigating to your [service credentials](https://console.aws.amazon.com/iam/home?#/security_credentials) in the IAM service on AWS. Click "Create access key" here and download the file. This file contains your access credentials.
+Your default region can be found in the AWS Web Management Console beside your username. Select the region drop down to find the region name (eg. us-east-1) corresponding with your location.
 
 # Anchor API with Quorum
 ## Setup a Kubernetes cluster
@@ -28,8 +46,9 @@ aws eks --region eu-west-2 update-kubeconfig --name pl-cluster2
 * If you want to deploy your own Kubernetes cluster you can follow this [guideline](k8s_cluster/eks)
 
 ## Deploy Quorum network
+Clone our [blockchain2-demo](https://github.com/PharmaLedger-IMI/blockchain2-demo) (this) repo then follow below steps:
 
-Run following commands one by one
+Run following command in `blockchain2-demo` directory one by one
 ```
 kubectl apply -f quorum_network/k8s
 kubectl apply -f quorum_network/k8s/deployments
@@ -50,8 +69,9 @@ quorum-node4   LoadBalancer   172.20.64.242    ac6924ee3b1cf4ba4b4e08941bab14aa-
 ```
 
 ## Deploy Anchor API
+Clone our [blockchain2-demo](https://github.com/PharmaLedger-IMI/blockchain2-demo) (this) repo then follow below steps:
 
-Run following command to deploy the Anchor API which will use Quorum network. 
+Run following command in `blockchain2-demo` directory to deploy the Anchor API which will use Quorum network. 
 Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`
 ```
@@ -68,8 +88,11 @@ aws eks --region eu-west-2 update-kubeconfig --name pl-cluster3
 
 ## Deploy Ethereum network
 Clone our [blockchain3-demo](https://github.com/PharmaLedger-IMI/blockchain3-demo) repo then follow below steps:
+
+Run following command in `blockchain3-demo` directory:
 ```
 helm install my-eth-pharmaledger stable/ethereum -f values.yaml
+kubectl apply -f ethereum-geth-tx-loadbalancer.yaml
 ```
 Run following command to list all the services that are running.
 ```
@@ -87,7 +110,7 @@ my-eth-pharmaledger-ethereum-geth-tx    ClusterIP      172.20.217.232   <none>  
 ## Deploy Anchor API
 Clone our [blockchain2-demo](https://github.com/PharmaLedger-IMI/blockchain2-demo) (this) repo then follow below steps:
 
-Run following command to deploy the Anchor API which will use Ethereum network. 
+Run following command in `blockchain2-demo` directory to deploy the Anchor API which will use Ethereum network. 
 Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`.
 Use `lst7upm` as value of `env.web3_password`.
