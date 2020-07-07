@@ -55,7 +55,7 @@ Run following command to deploy the Anchor API which will use Quorum network.
 Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`
 ```
-helm install --set env.web3_provider=http://172.20.179.183:8545 --set env.web3_account=0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e anchor-api-quorum helm-charts/
+helm install --set env.web3_provider=http://172.20.179.183:8545 --set env.web3_account=0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e anchor-api-quorum anchor_api/helm-charts/
 ```
 
 # Anchor API with Ethereum
@@ -67,7 +67,7 @@ aws eks --region eu-west-2 update-kubeconfig --name pl-cluster3
 * If you want to deploy your own Kubernetes cluster you can follow this [guideline](k8s_cluster/eks)
 
 ## Deploy Ethereum network
-Clone our [blockchain3-demo](https://github.com/PharmaLedger-IMI/blockchain3-demo) repo then run following commands one by one
+Clone our [blockchain3-demo](https://github.com/PharmaLedger-IMI/blockchain3-demo) repo then follow below steps:
 ```
 helm install my-eth-pharmaledger stable/ethereum -f values.yaml
 ```
@@ -85,10 +85,12 @@ my-eth-pharmaledger-ethereum-geth-tx    ClusterIP      172.20.217.232   <none>  
 ```
 
 ## Deploy Anchor API
+Clone our [blockchain2-demo](https://github.com/PharmaLedger-IMI/blockchain2-demo) (this) repo then follow below steps:
 
-Run following command to deploy the Anchor API which will use Quorum network. 
+Run following command to deploy the Anchor API which will use Ethereum network. 
 Use `ClusterIP` of `quorum-node1` as host part of `env.web3_provider`.
-Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`
+Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`.
+Use `lst7upm` as value of `env.web3_password`.
 ```
-helm install --set env.web3_provider=http://172.20.217.232:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum helm-charts/
+helm install --set env.web3_provider=http://172.20.217.232:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum anchor_api/helm-charts/
 ```
