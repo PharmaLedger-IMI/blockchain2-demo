@@ -115,5 +115,5 @@ Use `ClusterIP` of `*-ethereum-geth-tx` as host part of `env.web3_provider`.
 Use `0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e` as value of `env.web3_account`.
 Use `lst7upm` as value of `env.web3_password`.
 ```
-helm install --set env.web3_provider=http://172.20.214.92:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum anchor_api/helm-charts/
+helm install --set env.web3_provider=http://172.20.217.232:8545 --set env.web3_account=0x3852360755845889E675C4b683f3F26bf8f12aeA --set env.web3_password=lst7upm anchor-api-ethereum anchor_api/helm-charts/
 ```
