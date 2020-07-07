@@ -9,7 +9,7 @@ metadata:
   
   name: quorum-node1
   labels:
-    app: ethereum
+    app: qubernetes
     tier: backend
     name: quorum-node1
 spec:
@@ -18,7 +18,7 @@ spec:
     tier: backend
     name: quorum-node1-deployment
   # NodePort | ClusterIP | LoadBalancer
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: tm-manager 
       protocol: TCP
@@ -60,8 +60,8 @@ spec:
     app: qubernetes
     tier: backend
     name: quorum-node2-deployment
-  # NodePort | ClusterIP
-  type: LoadBalancer
+  # NodePort | ClusterIP | LoadBalancer
+  type: ClusterIP
   ports:
     - name: tm-manager 
       protocol: TCP
@@ -103,8 +103,8 @@ spec:
     app: qubernetes
     tier: backend
     name: quorum-node3-deployment
-  # NodePort | ClusterIP
-  type: LoadBalancer
+  # NodePort | ClusterIP | LoadBalancer
+  type: ClusterIP
   ports:
     - name: tm-manager 
       protocol: TCP
@@ -146,8 +146,8 @@ spec:
     app: qubernetes
     tier: backend
     name: quorum-node4-deployment
-  # NodePort | ClusterIP
-  type: LoadBalancer
+  # NodePort | ClusterIP | LoadBalancer
+  type: ClusterIP
   ports:
     - name: tm-manager 
       protocol: TCP

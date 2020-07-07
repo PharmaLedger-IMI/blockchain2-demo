@@ -64,7 +64,13 @@ app.post('/data_anchors', async (req, res) => {
         }
 
         const instance = await DataAnchor.new(req.body.name, req.body.hash, JSON.stringify(req.body.metadata), {from: account});
-        const data = await instance.getData.call();
+        let data = [];
+
+        try {
+            data = await instance.getData.call();
+        } catch (error) {
+            data = [null, null, null, '{}']
+        }
 
         if (doUnlock && unlocked) {
             console.log('>> Locking account ' + account);
@@ -76,6 +82,7 @@ app.post('/data_anchors', async (req, res) => {
             name: data[1],
             hash: data[2],
             metadata: JSON.parse(data[3]),
+            transactionHash: instance.transactionHash,
         });
     } catch (error) {
         console.log(error)
