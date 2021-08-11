@@ -1,0 +1,94 @@
+
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+# nodekey (enode) (geth/ethereum)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node3-nodekey-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node3-nodekey-config
+data:
+  nodekey: |
+    ccaef2d50e7222dd93bc56f19b9666ca7d26f104628a039470b2152745846bb0
+---
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+# nodekey (enode) (geth/ethereum)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node3-enode-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node3-enode-config
+data:
+  enode: |
+    d07a35d6a45822f0d0df9b04141658946d850ae3ce34f21df7e142b3baf1c553a500162d7543bd146dbc7badd6e838f2bb3eaac05d8d55fc283cce598d5a6fb4
+
+# ethereum / geth account keys (keystore)
+---
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node3-account-key-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node3-account-key-config
+data:
+  key: |-
+
+
+    {"address":"1864231bcb825578ea0908d0fe93315548cf0a5f","crypto":{"cipher":"aes-128-ctr","ciphertext":"8b595b3333ee0d50248e32f19a4e54987658a6bb277effa95127ab5e203f94d4","cipherparams":{"iv":"9307e11027194823573282e22962c7b1"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"336b129b7d8d7aaba4feb53073c0b2b85c1a6847257bfbdf02b265ab790dcf0a"},"mac":"896580d484b7c59ff843d1e4399fd39f8ece536144d45bb25217c2a036fcb2e1"},"id":"d8a8a553-1dda-4369-9120-062bcb71fb5b","version":3}
+# end node
+
+---
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+# nodekey (enode) (geth/ethereum)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node4-nodekey-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node4-nodekey-config
+data:
+  nodekey: |
+    c4ff0655ee281105ba563592fcfc0516ea88393c01f36675ccf418f2b8737548
+---
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+# nodekey (enode) (geth/ethereum)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node4-enode-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node4-enode-config
+data:
+  enode: |
+    d57d56da6bbe5bdd8293de2eaa4592d12a9995b7b44f0525e615bdbb3d60dc6627d13e6221b3e54c20704a00c0aa71fe62b25f23400eb4d800c0da3fdcdbc265
+
+# ethereum / geth account keys (keystore)
+---
+# kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quorum-node4-account-key-config
+
+  labels:
+    app: qubernetes
+    name: quorum-node4-account-key-config
+data:
+  key: |-
+
+
+    {"address":"a74dd2bfd326ae95feb5a03ef592ee421e867cdc","crypto":{"cipher":"aes-128-ctr","ciphertext":"25b42ba940382a6bee30d9d7db02e3ce49c4d860c259782d2fe3604a4d017dbf","cipherparams":{"iv":"7b710a0a15c6b04b82a663cd8d07926a"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"8631b52af404166ff202d120cfcaa7708ad126c7bff72ce178cd4c0211cf6361"},"mac":"51daefa9659d35ae4fbe476631e74e338431ce3d03fdf170726f490cd9da00ce"},"id":"a9f076b1-9366-47fe-a903-6a3cac80d00c","version":3}
+# end node
+

@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+
+  name: quorum-node3
+  labels:
+    app: qubernetes
+    tier: backend
+    name: quorum-node3
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  selector:
+    app: qubernetes
+    tier: backend
+    name: quorum-node3-deployment
+  # NodePort | ClusterIP | LoadBalancer
+  type: LoadBalancer
+  ports:
+    - name: rpc-listener
+      protocol: TCP
+      port: 8545
+      targetPort: 8545
+    - name: quorum-listener
+      protocol: TCP
+      port: 30303
+      targetPort: 30303
+    - name: raft
+      protocol: TCP
+      targetPort: 50401
+      port: 50401
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+
+  name: quorum-node4
+  labels:
+    app: qubernetes
+    tier: backend
+    name: quorum-node4
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  selector:
+    app: qubernetes
+    tier: backend
+    name: quorum-node4-deployment
+  # NodePort | ClusterIP | LoadBalancer
+  type: LoadBalancer
+  ports:
+    - name: rpc-listener
+      protocol: TCP
+      port: 8545
+      targetPort: 8545
+    - name: quorum-listener
+      protocol: TCP
+      port: 30303
+      targetPort: 30303
+    - name: raft
+      protocol: TCP
+      targetPort: 50401
+      port: 50401

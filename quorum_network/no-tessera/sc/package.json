@@ -1,0 +1,18 @@
+{
+  "name": "sc",
+  "version": "1.0.0",
+  "description": "Anchor API",
+  "main": "./test/test.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "web3": "^1.2.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ./test/test.js"
+  },
+  "author": "Mastahac Bogdan",
+  "license": "ISC"
+}
