@@ -36,10 +36,7 @@ spec:
               /usr/local/bin/geth --datadir $QUORUM_DATA_DIR init /etc/quorum/genesis/genesis-geth.json;
               date > $QUORUM_DATA_DIR/genesis_created;
            fi;
-           cp -r /etc/quorum/qdata/contracts-tmp /etc/quorum/qdata/contracts;
-           chmod 755  /etc/quorum/qdata/contracts/runscript.sh;
-           chmod 755  /etc/quorum/qdata/contracts/raft_add_all_permissioned.sh;
-           chmod 755  /etc/quorum/qdata/contracts/raft_add_node.sh;
+
           "
         env:
           - name: QUORUM_DATA_DIR
@@ -52,9 +49,6 @@ spec:
         - name: genesis-config-persistent-storage
           mountPath: /etc/quorum/genesis/genesis-geth.json
           subPath: genesis-geth.json
-        - name: contracts-config
-          mountPath: /etc/quorum/qdata/contracts-tmp
-          readOnly: false
       containers:
       - name: quorum
         image: quorumengineering/quorum:2.5.0
@@ -99,7 +93,6 @@ spec:
            --rpccorsdomain=\"*\" \
            --password $QUORUM_DATA_DIR/password.txt 2>&1 | tee -a /etc/quorum/qdata/logs/quorum.log;"
         ports:
-          - containerPort: 50401
           - containerPort: 8545
           - containerPort: 30303
         env:
@@ -186,9 +179,6 @@ spec:
           items:
           - key: genesis-geth.json
             path: genesis-geth.json
-      - name: contracts-config
-        configMap:
-          name: contracts-config
       - name: quorum-key-config-persistent-storage
         configMap:
           name: quorum-node3-account-key-config

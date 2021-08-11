@@ -7,10 +7,10 @@ metadata:
     app: qubernetes
     name: quorum-env-config
 data:
-  QUORUM_NODE1_SERVICE_HOST: 10.100.223.53
-  QUORUM_NODE2_SERVICE_HOST: 10.100.222.112
-  QUORUM_NODE3_SERVICE_HOST: 10.100.40.58
-  QUORUM_NODE4_SERVICE_HOST: 10.100.11.154
+  QUORUM_NODE1_SERVICE_HOST: 10.100.157.27
+  QUORUM_NODE2_SERVICE_HOST: 10.100.96.43
+  QUORUM_NODE3_SERVICE_HOST: 10.100.75.184
+  QUORUM_NODE4_SERVICE_HOST: 10.100.87.128
 
 ---
 # kubectl create configmap game-config --from-file=configure-pod-container/dd1/key
@@ -26,10 +26,10 @@ data:
   permissioned-nodes.json: |
 
     [
-      "enode://60380ae7841943b431cc59a4da1b917ef43a13b9548436c5df35c39e28ee88a08514c52d4a1c8b565754c2a9207e004809ac45076171dcbfdcdf9cad0ddc4d11@%QUORUM-NODE1_SERVICE_HOST%:30303?discport=0&raftport=50401",
-      "enode://f633e5bad740e7b33e82452b8e88b8503dcd65611e98e3dad7e2fd62e34066f39d80228a117026e268b8a4c6afc9fff1084485de9430228b94f3820627c0fefd@%QUORUM-NODE2_SERVICE_HOST%:30303?discport=0&raftport=50401",
-      "enode://d07a35d6a45822f0d0df9b04141658946d850ae3ce34f21df7e142b3baf1c553a500162d7543bd146dbc7badd6e838f2bb3eaac05d8d55fc283cce598d5a6fb4@%QUORUM-NODE3_SERVICE_HOST%:30303?discport=0&raftport=50401",
-      "enode://d57d56da6bbe5bdd8293de2eaa4592d12a9995b7b44f0525e615bdbb3d60dc6627d13e6221b3e54c20704a00c0aa71fe62b25f23400eb4d800c0da3fdcdbc265@%QUORUM-NODE4_SERVICE_HOST%:30303?discport=0&raftport=50401"
+      "enode://60380ae7841943b431cc59a4da1b917ef43a13b9548436c5df35c39e28ee88a08514c52d4a1c8b565754c2a9207e004809ac45076171dcbfdcdf9cad0ddc4d11@%QUORUM-NODE1_SERVICE_HOST%:30303?discport=0",
+      "enode://f633e5bad740e7b33e82452b8e88b8503dcd65611e98e3dad7e2fd62e34066f39d80228a117026e268b8a4c6afc9fff1084485de9430228b94f3820627c0fefd@%QUORUM-NODE2_SERVICE_HOST%:30303?discport=0",
+      "enode://d07a35d6a45822f0d0df9b04141658946d850ae3ce34f21df7e142b3baf1c553a500162d7543bd146dbc7badd6e838f2bb3eaac05d8d55fc283cce598d5a6fb4@%QUORUM-NODE3_SERVICE_HOST%:30303?discport=0",
+      "enode://d57d56da6bbe5bdd8293de2eaa4592d12a9995b7b44f0525e615bdbb3d60dc6627d13e6221b3e54c20704a00c0aa71fe62b25f23400eb4d800c0da3fdcdbc265@%QUORUM-NODE4_SERVICE_HOST%:30303?discport=0"
     ]
 
   permissioned-update.sh: |
@@ -38,129 +38,6 @@ data:
     PERM_NODE_JSON=$(echo $PERM_NODE_TMPL |  sed "s/%QUORUM-NODE1_SERVICE_HOST%/$QUORUM_NODE1_SERVICE_HOST/g" |  sed "s/%QUORUM-NODE2_SERVICE_HOST%/$QUORUM_NODE2_SERVICE_HOST/g" |  sed "s/%QUORUM-NODE3_SERVICE_HOST%/$QUORUM_NODE3_SERVICE_HOST/g" |  sed "s/%QUORUM-NODE4_SERVICE_HOST%/$QUORUM_NODE4_SERVICE_HOST/g" );
     echo $PERM_NODE_JSON >  $QUORUM_DATA_DIR/permissioned-nodes.json;
     cp $QUORUM_DATA_DIR/permissioned-nodes.json $QUORUM_DATA_DIR/static-nodes.json;
-
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: contracts-config
-
-  labels:
-    app: qubernetes
-    name: contracts-config
-data:
-  runscript.sh: |-
-    #!/bin/ash
-    PRIVATE_CONFIG=$TM_HOME/tm.ipc geth --exec "loadScript(\"$1\")" attach ipc:$QUORUM_HOME/dd/geth.ipc
-# set the tm.pub for node2 in the privateFor field.
-# assumes that at least 2 nodes are being deployed.
-  private_contract.js: |-
-
-    a = eth.accounts[0]
-    web3.eth.defaultAccount = a;
-
-    // abi and bytecode generated from simplestorage.sol:
-    // > solcjs --bin --abi simplestorage.sol
-    var abi = [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"initVal","type":"uint256"}],"payable":false,"type":"constructor"}];
-
-    var bytecode = "0x6060604052341561000f57600080fd5b604051602080610149833981016040528080519060200190919050505b806000819055505b505b610104806100456000396000f30060606040526000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632a1afcd914605157806360fe47b11460775780636d4ce63c146097575b600080fd5b3415605b57600080fd5b606160bd565b6040518082815260200191505060405180910390f35b3415608157600080fd5b6095600480803590602001909190505060c3565b005b341560a157600080fd5b60a760ce565b6040518082815260200191505060405180910390f35b60005481565b806000819055505b50565b6000805490505b905600a165627a7a72305820d5851baab720bba574474de3d09dbeaabc674a15f4dd93b974908476542c23f00029";
-
-    var simpleContract = web3.eth.contract(abi);
-    var simple = simpleContract.new(42, {from:web3.eth.accounts[0], data: bytecode, gas: 0x47b760, privateFor: ["jyPmTXxHu36mBwHr9MHksxMn/PcUgQD4vxbzK1PPnyo="]}, function(e, contract) {
-    	if (e) {
-    		console.log("err creating contract", e);
-    	} else {
-    		if (!contract.address) {
-    			console.log("Contract transaction send: TransactionHash: " + contract.transactionHash + " waiting to be mined...");
-    		} else {
-    			console.log("Contract mined! Address: " + contract.address);
-    			console.log(contract);
-    		}
-    	}
-    });
-  public_contract.js: |-
-    a = eth.accounts[0]
-    web3.eth.defaultAccount = a;
-
-    // abi and bytecode generated from simplestorage.sol:
-    // > solcjs --bin --abi simplestorage.sol
-    var abi = [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"initVal","type":"uint256"}],"payable":false,"type":"constructor"}];
-
-    var bytecode = "0x6060604052341561000f57600080fd5b604051602080610149833981016040528080519060200190919050505b806000819055505b505b610104806100456000396000f30060606040526000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632a1afcd914605157806360fe47b11460775780636d4ce63c146097575b600080fd5b3415605b57600080fd5b606160bd565b6040518082815260200191505060405180910390f35b3415608157600080fd5b6095600480803590602001909190505060c3565b005b341560a157600080fd5b60a760ce565b6040518082815260200191505060405180910390f35b60005481565b806000819055505b50565b6000805490505b905600a165627a7a72305820d5851baab720bba574474de3d09dbeaabc674a15f4dd93b974908476542c23f00029";
-
-    var simpleContract = web3.eth.contract(abi);
-    var simple = simpleContract.new(42, {from:web3.eth.accounts[0], data: bytecode, gas: 0x47b760}, function(e, contract) {
-            if (e) {
-                    console.log("err creating contract", e);
-            } else {
-                    if (!contract.address) {
-                            console.log("Contract transaction send: TransactionHash: " + contract.transactionHash + " waiting to be mined...");
-                    } else {
-                            console.log("Contract mined! Address: " + contract.address);
-                            console.log(contract);
-                    }
-            }
-    });
-## Raft management helpers: adding nodes
-  raft_add_node.sh: |-
-    #!/bin/sh
-
-    ENODE_URL=$1
-    PRIVATE_CONFIG=$TM_HOME/tm.ipc geth --exec "raft.addPeer(\"$ENODE_URL\")" attach ipc:$QUORUM_HOME/dd/geth.ipc;
-  raft_add_all_permissioned.sh: |-
-    #!/bin/sh
-
-    set -x
-
-    # Read the permissioned-nodes.json (this will be redeployed by k8s)
-    # and add any new entry into the permissioned set.
-    PERMISSION_FILE=$QHOME/dd/permissioned-nodes.json
-    ENODE_URLS=$(cat $PERMISSION_FILE | jq '.[]')
-    RAFT_ADD_FILE=$QHOME/contracts/raft_add_$(date +%m-%d-%Y)
-    RAFT_ADD_LOG=$RAFT_ADD_FILE.log
-    RAFT_ADD_ERR=$RAFT_ADD_FILE.err
-    RAFT_ADD_FILE=$QHOME/contracts/raft_added.csv
-
-    touch $RAFT_ADD_LOG
-    touch $RAFT_ADD_ERR
-    date +%m-%d-%Y-%T >> $RAFT_ADD_ERR
-    date +%m-%d-%Y-%T >> $RAFT_ADD_LOG
-
-    echo "  Going through ENODE_URLS"
-    echo "  $ENODE_URLS"
-    echo
-    for URL in $ENODE_URLS; do
-
-      # Check if the URL from the permissioned-nodes is this node, if so
-      # don't add because it will cause an error.
-      if echo $URL | grep -Eq $THIS_ENODE; then
-        echo "skip adding self enodeID [$THIS_ENODE]"
-        continue;
-      fi
-
-      RAFTID=$(PRIVATE_CONFIG=$TM_HOME/tm.ipc geth --exec "raft.addPeer($URL)" attach ipc:$QUORUM_HOME/dd/geth.ipc)
-
-      # if the addPerr command isn't successful log the returned error and go to next ENODE_URL
-      if echo $RAFTID | grep -Eiq ERR; then
-        echo "RaftID Err: [$RAFTID]" >> $RAFT_ADD_ERR
-        echo $RAFTID%%$URL >> $RAFT_ADD_ERR;
-        continue;
-      fi
-
-      if echo $RAFTID | grep -Eq '[0-9][0-9]*'; then
-        echo $RAFTID - $URL
-        echo --raftjoinexisting $RAFTID
-        echo "$RAFTID%%$URL" >> $RAFT_ADD_LOG;
-        # holds all raft nodes added so far on this node.
-        echo "$RAFTID,$URL" >> $RAFT_ADD_FILE;
-      fi
-
-    done
-
-    echo | tee -a $RAFT_ADD_ERR $RAFT_ADD_LOG
-    echo ========================================= | tee -a $RAFT_ADD_ERR $RAFT_ADD_LOG
-    echo | tee -a $RAFT_ADD_ERR $RAFT_ADD_LOG
 
 
 

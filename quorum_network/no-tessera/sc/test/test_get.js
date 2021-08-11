@@ -18,7 +18,7 @@ function getAbi(){
 }
 
 const account = '0x66d66805E29EaB59901f8B7c4CAE0E38aF31cb0e';
-const contract = '0x243c5fd09E03C02a4f2e502320b9884e157200a1';
+const contract = '0xcCC46A73d616A3adD5f0E5b448BAfeDD4A2Da61A';
 const factory = getFactory('http://localhost:8545',contract,getAbi(),account);
 
 factory.methods.getStuff("key1").call().then((f) => {
